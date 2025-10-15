@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "964650950791",
+    "project_id": "proyectfire-443af",
+    "storage_bucket": "proyectfire-443af.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:964650950791:android:353e7c952980c9c4e89822",
+        "android_client_info": {
+          "package_name": "com.example.proyectfire"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpDA9-tjP3VIgZjeFc11bUcMJYSf34bHQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
