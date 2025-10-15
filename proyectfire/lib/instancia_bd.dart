@@ -1,63 +1,42 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// Se crea una instancia de Cloud Firestore.
+FirebaseFirestore db = FirebaseFirestore.instance;
 
-FirebaseFirestore db= FirebaseFirestore.instance;
-
-
-Future<List> obtenerUsuario() async {
-  List usuarios = [];
-  try {
-    CollectionReference collectionReferencePeople =
-        db.collection("usuarios");
-
-
-    QuerySnapshot queryUsuarios = await collectionReferencePeople.get();
-
-
-    queryUsuarios.docs.forEach((documento) {
-      Map<String, dynamic> dataConId = documento.data() as Map<String, dynamic>;
-
-
-      String dni = dataConId.containsKey('dni') ? dataConId['dni'] : 'Sin DNI';
-      String nombre = dataConId.containsKey('nombre') ?
-          dataConId['nombre'] : 'Sin Nombre';
-
-
-      dataConId['uid'] = documento.id;
-
-
-      usuarios.add(
-          {'dni': dni, 'nombre': nombre, 'uid': documento.id});
-    });
-  } catch (e) {
-    print("Error al obtener usuarios: $e");
-  }
-
-
-  return usuarios;
+// --- LEER DATOS ---
+// Función para obtener todos los usuarios de la colección 'usuarios'.
+// Devuelve un Stream que se actualizará en tiempo real.
+Stream<QuerySnapshot> obtenerUsuarios() {
+  return db.collection('usuarios').snapshots();
 }
 
-
+// --- CREAR DATOS ---
+// Función asíncrona para agregar un nuevo usuario.
 Future<void> agregarUsuario(String dni, String nombre) async {
-  await db.collection("usuarios").add({"dni":dni, "nombre":nombre});
+  // 'add' crea un documento con un ID generado automáticamente.
+  await db.collection("usuarios").add({
+    "dni": dni,
+    "nombre": nombre,
+  });
+}
+
+// --- ACTUALIZAR DATOS ---
+// Función asíncrona para actualizar el nombre de un usuario existente.
+Future<void> actualizarUsuario(String uid, String nuevoNombre) async {
+  // 'doc(uid)' apunta al documento específico y 'update' modifica sus campos.
+  await db.collection("usuarios").doc(uid).update({"nombre": nuevoNombre});
+}
+
+// --- ELIMINAR DATOS ---
+// Función asíncrona para eliminar un usuario.
+Future<void> eliminarUsuario(String uid) async {
+  // 'doc(uid)' apunta al documento específico y 'delete' lo elimina.
+  await db.collection("usuarios").doc(uid).delete();
 }
 
 
-Future<void> actualizarUsuario(String uid, String dni, String nombre)
-async {
-  await db.collection("usuarios").doc(uid).set({"dni":dni, "nombre":nombre});
-}
 
 
-Future<void> eliminarUsuario(String dni) async {
-  final CollectionReference users =
-      FirebaseFirestore.instance.collection('usuarios');
 
 
-  try {
-    await users.doc(dni).delete();
-    print('Usuario eliminado correctamente');
-  } catch (e) {
-    print('Error eliminando usuario: $e');
-  }
-}
+
